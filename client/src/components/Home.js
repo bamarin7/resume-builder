@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Loading from './Loading';
+import axios from 'axios';
 
-const Home = () => {
+const Home = ({ setResult }) => {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [currentPosition, setCurrentPosition] = useState('');
   const [currentLength, setCurrentLength] = useState(1);
@@ -9,18 +12,6 @@ const Home = () => {
   const [headshot, setHeadshot] = useState(null);
   const [loading, setLoading] = useState(false);
   const [companyInfo, setCompanyInfo] = useState([{ name: '', positon: '' }]);
-
-  const handleFormSubmit = (e) => {
-    e.preventDefault();
-    console.log({
-      fullName,
-      currentPosition,
-      currentLength,
-      currentTechnologies,
-      headshot,
-    });
-    setLoading(true);
-  };
 
   // This will update the state with the user's input
   const handleAddCompany = () => setCompanyInfo([...companyInfo, { name: '', position: ''}]);
@@ -38,6 +29,29 @@ const Home = () => {
     const list = [...companyInfo];
     list[index][name] = value;
     setCompanyInfo(list);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append('headshotImage', headshot, headshot.name);
+    formData.append('fullname', fullName);
+    formData.append('currentPosition', currentPosition);
+    formData.append('currentLength', currentLength);
+    formData.append('ccurrentTechnologies', currentTechnologies);
+    formData.append('workHistory', JSON.stringify(companyInfo));
+    axios
+      .post('http://localhost:4000/resume/create', formData, {})
+      .then((res) => {
+        console.log(res.data.data)
+        if (res.data.message) {
+          setResult(res.data.data);
+          navigate('/resume');
+        }
+      })
+      .catch((err) => console.error(err));
+    setLoading(true);
   };
 
   // This will render the Loading component when you submit the form
@@ -130,12 +144,12 @@ const Home = () => {
             <div className='btn__group'>
               {companyInfo.length - 1 === index && companyInfo.length < 4 && (
                 <button id='addBtn' onClick={handleAddCompany}>
-                  +
+                  Add
                 </button>
               )}
               {companyInfo.length > 1 && (
                 <button id='deleteBtn' onClick={() => handleRemoveCompany(index)}>
-                  x
+                  Del
                 </button>
               )}
             </div>
