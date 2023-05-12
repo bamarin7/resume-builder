@@ -9,7 +9,6 @@ const Home = ({ setResult }) => {
   const [currentPosition, setCurrentPosition] = useState('');
   const [currentLength, setCurrentLength] = useState(1);
   const [currentTechnologies, setCurrentTechnologies] = useState('');
-  const [headshot, setHeadshot] = useState(null);
   const [loading, setLoading] = useState(false);
   const [companyInfo, setCompanyInfo] = useState([{ name: '', positon: '' }]);
 
@@ -35,7 +34,6 @@ const Home = ({ setResult }) => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append('headshotImage', headshot, headshot.name);
     formData.append('fullname', fullName);
     formData.append('currentPosition', currentPosition);
     formData.append('currentLength', currentLength);
@@ -59,105 +57,98 @@ const Home = ({ setResult }) => {
     return <Loading />;
   }
   return (
-    <div className='app'>
-      <h1>Resume Builder</h1>
-      <p>Generate a resume with ChatGPT in a few seconds!</p>
-      <form
-        onSubmit={handleFormSubmit}
-        method='POST'
-        encType='multipart/form-data'
-      >
-        <label htmlFor='fullName'>Enter your full name</label>
-        <input
-          type='text'
-          required
-          name='fullName'
-          id='fullName'
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-        />
-        <div className='nestedContainer'>
-          <div>
-            <label htmlFor='currentPOsition'>Current Position</label>
-            <input
-              type='text'
-              required
-              name='currentPositon'
-              className='currentInput'
-              value={currentPosition}
-              onChange={(e) => setCurrentPosition(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='currentLength'>For how long? (years)</label>
-            <input
-              type='number'
-              required
-              name='currentLength'
-              className='currentInput'
-              value={currentLength}
-              onChange={(e) => setCurrentLength(e.target.value)}
-            />
-          </div>
-          <div>
-            <label htmlFor='currentTechnologies'>Technology stack</label>
-            <input
-              type='text'
-              required
-              name='currentTechnologies'
-              className='currentInput'
-              value={currentTechnologies}
-              onChange={(e) => setCurrentTechnologies(e.target.value)}
-            />
-          </div>
-        </div>
-        <label htmlFor='photo'>Upload your headshot!</label>
-        <input
-          type='file'
-          name='photo'
-          required
-          id='photo'
-          accept='image/x-png,image/jpeg'
-          onChange={(e) => setHeadshot(e.target.files[0])}
-        />
-        {companyInfo.map((company, index) => (
-          <div className='nestedContainer' key={index}>
-            <div className='companies'>
-              <label htmlFor='name'>Company Name</label>
+    <div className="page">
+      <div className='app container'>
+        <h1>Build Your Resume!</h1>
+        <p>Lets generate a resume with ChatGPT in a few seconds</p>
+        <form
+          onSubmit={handleFormSubmit}
+          method='POST'
+          encType='multipart/form-data'
+        >
+          <label htmlFor='fullName'>Enter your name:</label>
+          <input
+            type='text'
+            required
+            name='fullName'
+            id='fullName'
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+          />
+          <div className='nestedContainer'>
+            <div>
+              <label htmlFor='currentPOsition'>Current Position:</label>
               <input
                 type='text'
-                name='name'
                 required
-                onChange={(e) => handleUpdateCompany(e, index)}
+                name='currentPositon'
+                className='currentInput'
+                value={currentPosition}
+                onChange={(e) => setCurrentPosition(e.target.value)}
               />
             </div>
-            <div className='companies'>
-              <label htmlFor='position'>Position Held</label>
+            <div>
+              <label htmlFor='currentLength'>For how long?</label>
+              <input
+                type='number'
+                required
+                name='currentLength'
+                className='currentInput'
+                value={currentLength}
+                onChange={(e) => setCurrentLength(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor='currentTechnologies'>Tech stack:</label>
               <input
                 type='text'
-                name='position'
                 required
-                onChange={(e) => handleUpdateCompany(e, index)}
+                name='currentTechnologies'
+                className='currentInput'
+                value={currentTechnologies}
+                onChange={(e) => setCurrentTechnologies(e.target.value)}
               />
             </div>
-
-            <div className='btn__group'>
-              {companyInfo.length - 1 === index && companyInfo.length < 4 && (
-                <button id='addBtn' onClick={handleAddCompany}>
-                  Add
-                </button>
-              )}
-              {companyInfo.length > 1 && (
-                <button id='deleteBtn' onClick={() => handleRemoveCompany(index)}>
-                  Del
-                </button>
-              )}
-            </div>
           </div>
-        ))}
+          {companyInfo.map((company, index) => (
+            <div className='nestedContainer' key={index}>
+              <div className='companies'>
+                <label htmlFor='name'>Company:</label>
+                <input
+                  type='text'
+                  name='name'
+                  required
+                  onChange={(e) => handleUpdateCompany(e, index)}
+                />
+              </div>
+              <div className='companies'>
+                <label htmlFor='position'>Position:</label>
+                <input
+                  type='text'
+                  name='position'
+                  required
+                  onChange={(e) => handleUpdateCompany(e, index)}
+                />
+              </div>
 
-        <button>Work your magic!</button>
-      </form>
+              <div className='btn__group'>
+                {companyInfo.length - 1 === index && companyInfo.length < 4 && (
+                  <button id='addBtn' onClick={handleAddCompany}>
+                    Add
+                  </button>
+                )}
+                {companyInfo.length > 1 && (
+                  <button id='deleteBtn' onClick={() => handleRemoveCompany(index)}>
+                    Del
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+
+          <button className='btn1'>Work your magic!</button>
+        </form>
+      </div>
     </div>
   );
 };

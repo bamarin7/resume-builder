@@ -33,17 +33,10 @@ function Resume({ result }) {
               {result.currentLength} years of work experience
             </p>
           </div>
-          <div>
-            <img
-              src={result.image_url}
-              alt={result.fullName}
-              className='resumeImage'
-            />
-          </div>
         </header>
         <div className="resumeBody">
           <div>
-            <h2 className="resumeBodyTitle">PROFILE SUMMARY</h2>
+            <h2 className="resumeBodyTitle">Profile Summary</h2>
             <p
               dangerouslySetInnerHTML={{
                 __html: replaceWithBr(result.objective),
@@ -52,7 +45,7 @@ function Resume({ result }) {
             />
           </div>
           <div>
-            <h2 className="resumeBodyTitle">WORK HISTORY</h2>
+            <h2 className="resumeBodyTitle">Work History</h2>
             {result.workHistory.map((work) => (
               <p className="resumeBodyContent" key={work.name}>
                 <span style={{ fontWeight: 'bold' }}>{work.name}</span> -{' '}{work.position}
@@ -60,7 +53,7 @@ function Resume({ result }) {
             ))}
           </div>
           <div>
-            <h2 className="resumeBodyTitle">JOB PROFILE</h2>
+            <h2 className="resumeBodyTitle">Career Profile</h2>
             <p
               dangerouslySetInnerHTML={{
                 __html: replaceWithBr(result.jobResponsibilities),
@@ -69,7 +62,7 @@ function Resume({ result }) {
             />
           </div>
           <div>
-            <h2 className="resumeBodyTitle">JOB RESPONSIBILITIES</h2>
+            <h2 className="resumeBodyTitle">Job Responsibilities</h2>
             <p
               dangerouslySetInnerHTML={{
                 __html: replaceWithBr(result.keypoints),
