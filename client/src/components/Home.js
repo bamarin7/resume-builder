@@ -33,14 +33,16 @@ const Home = ({ setResult }) => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append('fullname', fullName);
-    formData.append('currentPosition', currentPosition);
-    formData.append('currentLength', currentLength);
-    formData.append('ccurrentTechnologies', currentTechnologies);
-    formData.append('workHistory', JSON.stringify(companyInfo));
+    const data = {
+      fullName,
+      currentPosition,
+      currentLength,
+      currentTechnologies,
+      workHistory: JSON.stringify(companyInfo),
+    };
+
     axios
-      .post('http://localhost:4000/resume/create', formData, {})
+      .post('http://localhost:4000/resume/create', data, {})
       .then((res) => {
         console.log(res.data.data)
         if (res.data.message) {

@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
 });
 
 const configuration = new Configuration({
-  apiKey: <YOUR_API_KEY/>,
+  apiKey: <YOUT_API_KEY/>,
 })
 
 const openai = new OpenAIApi(configuration);
