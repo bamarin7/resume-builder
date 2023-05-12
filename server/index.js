@@ -23,13 +23,8 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({
-  storage: storage,
-  limits: { fileSize: 1024 * 1024 * 5 },
-});
-
 const configuration = new Configuration({
-  apiKey: <YOUR_API_KEY />,
+  apiKey: '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',
 })
 
 const openai = new OpenAIApi(configuration);
@@ -39,6 +34,7 @@ let database = [];
 const GPTFunction = async (text) => {
   const response = await openai.createCompletion({
     model: 'text-davinci-003',
+    // model: 'gpt-3.5-turbo',
     prompt: text,
     temperature: 0.6,
     max_tokens: 250,
@@ -49,7 +45,7 @@ const GPTFunction = async (text) => {
   return response.data.choices[0].text;
 };
 
-app.post('/resume/create', upload.single('headshotImage'), async (req, res) => {
+app.post('/resume/create', async (req, res) => {
   const {
     fullName,
     currentPosition,
@@ -63,7 +59,6 @@ app.post('/resume/create', upload.single('headshotImage'), async (req, res) => {
   const newEntry = {
     id: randomUUID(),
     fullName,
-    image_url: `http://localhost:4000/uploads/${req.file.filename}`,
     currentPosition,
     currentLength,
     currentTechnologies,
@@ -71,10 +66,12 @@ app.post('/resume/create', upload.single('headshotImage'), async (req, res) => {
   };
   
   // Job description prompt
-  const prompt1 = `I am writing a resume, my details are \n name: ${fullName} \n role: ${currentPosition} (${currentLength} years). \n I write in the technologies: ${currentTechnologies}. Can you write a 30 words description for the top of the resume(first person writing)?`;
+  const prompt1 = `I'm currently working on my resume and need a succinct yet impactful professional summary. Here are some key details about me: \n- Name: ${fullName} \n- Current Role: ${currentPosition} \n- Experience in Role: ${currentLength} years \n- Key Technologies: ${currentTechnologies}. \nCould you craft a compelling 30-word description that can sit at the top of my resume? Please maintain a first-person narrative.`;
+
 
   // Job responsibilities prompt
-  const prompt2 = `I am writing a resume, my details are \n name: ${fullName} \n role: ${currentPosition} (${currentLength} years). \n I write in the technologies: ${currentTechnologies}. Can you write 5 points for a resume on what I am good at?`;
+  const prompt2 = `I'm refining the 'Skills & Expertise' section of my resume and could use your assistance. Here's some information about me: \n- Name: ${fullName} \n- Current Role: ${currentPosition} \n- Experience in Role: ${currentLength} years \n- Key Technologies: ${currentTechnologies}. \nCould you help me articulate 5 key strengths or areas of expertise that align with my role and experience?`;
+
 
   const remainderText = () => {
     let stringText = '';
@@ -85,7 +82,8 @@ app.post('/resume/create', upload.single('headshotImage'), async (req, res) => {
   };
 
   // Job achievements prompt
-  const prompt3 = `I am writing a resume, my details are \n name: ${fullName} \n role: ${currentPosition} (${currentLength} years). \n During my years I worked at ${workArray.length} companies. ${remainderText} \n Can you write me 25 words for each company separated in numbers of my succession in the company (in first person)?`;
+  const prompt3 = `I'm currently detailing my work experience on my resume. Here are the important points: \n- Name: ${fullName} \n- Current Role: ${currentPosition} \n- Experience in Role: ${currentLength} years. \n- Number of Companies Worked at: ${workArray.length} \n- Additional Details: ${remainderText} \nCould you assist me in creating a concise 25-word description for each company I've worked at? Please number them according to my chronological progression and maintain a first-person perspective.`;
+
 
   // generate a GPT3 result
   const objective = await GPTFunction(prompt1);
